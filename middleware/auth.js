@@ -1,6 +1,6 @@
 const mongodb = require('../database/mongodb')
 const ObjectId = require('mongodb').ObjectId
-const crypto = require('crypto');
+const crypto = require('crypto')
 
 const hash = value => {
   return Buffer.from(crypto.createHash('md5').update(value).digest()).toString('base64')

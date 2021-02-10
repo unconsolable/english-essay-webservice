@@ -1,11 +1,9 @@
 exports.route = {
+  // test the connection of database 
   async get() {
-    this.db.query(`
-      SELECT * 
-      FROM ESSAY_USER`
-    , function (error, results){
-      if (error) throw error
-    })
-    return "success"
+    let record = await this.db.query(`
+      SELECT ?
+    `, ['1'])
+    return record
   }
 }
