@@ -70,9 +70,13 @@ app.use(require('./middleware/params'))
 // 2. 返回格式化，将下游返回内容包装一层JSON
 app.use(require('./middleware/return'))
 
+/**
+  ## E. MySQL 数据库
+ */
+app.use(require('./middleware/mysql'))
 
 /**
-  ## F. API 层
+  ## E. API 层
   负责为路由处理程序提供 API 以便路由处理程序使用的中间件。
 */
 // 2. 身份认证，为下面 redis 缓存提供了加解密函数
