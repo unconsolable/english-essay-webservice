@@ -1,71 +1,90 @@
-const mongodb = require('../database/mongodb')
-const ObjectId = require('mongodb').ObjectId
 const crypto = require('crypto')
 
+// 哈希算法，用于对 token 进行摘要
 const hash = value => {
-  return Buffer.from(crypto.createHash('md5').update(value).digest()).toString('base64')
+  return Buffer.from(crypto.createHash('sha256').update(value).digest()).toString('hex')
 }
 
+const tokenHashPool = {} // 用于缓存tokenHash，防止高峰期数据库爆炸💥
+
 module.exports = async (ctx, next) => {
-  let userdb = await mongodb('user')
-  let { QQ, num } = ctx.params
-  if (ctx.path.substr(0, 6) == '/admin' || ctx.path == '/testforadmin') {
-
-    console.log(ctx.params);
-
-    await next()
-  }
-  else if (ctx.path == '/user/login') {
-    if (num.length != 9) throw "无效一卡通号"
-    let isQQ = /[1-9]+[0-9]{4,11}/.test(QQ);
-    if (!isQQ) throw "无效QQ号"
-    let isnum = /[1-3]+[0-9]{8}/.test(num);
-    if (!isnum) throw "无效一卡通号"
-    let userQQ = await userdb.findOne({ QQ })
-    let usernum = await userdb.findOne({ num })
-    console.log(userQQ);
-    console.log(usernum);
-    if (!userQQ && !usernum) {
-      // throw "活动还没有开始哦！"
-      let name = num
-      let teamname = ""
-      let point = 0
-      let doneList = []
-      let token = hash(num)
-      await userdb.insertOne({
-        QQ,
-        num,
-        name,
-        teamname,
-        point,
-        doneList,
-        token,
-      })
-      ctx.params.token = token
-      ctx.params.message = "注册成功！"
-    } else {
-      if (userQQ && usernum && userQQ.token == usernum.token) {
-        ctx.params.token = userQQ.token
-        ctx.params.message = "登陆成功！"
-      }
-      else throw "QQ号或者一卡通错误"
+  if (ctx.path === '/auth') {
+    // 拦截auth请求
+    if (ctx.method.toUpperCase() !== 'POST') {
+      throw 405
     }
+    let { username, password } = ctx.params
+    if (typeof username !== 'string'
+      || typeof password !== 'string') {
+      throw '缺少认证参数'
+    }
+
+    let userid, role, name, xuehao
+    const [rows, field] = await ctx.db.query(`
+      SELECT ID, ROLE, NAME, XUEHAO
+      FROM ESSAY_USER
+      WHERE USERNAME = ? AND PASSWORD = ?
+    `, [username, password])
+    if (rows && field && rows.length === 1) {
+      userid = rows[0]['ID']
+      role = rows[0]['ROLE']
+      name = rows[0]['NAME']
+      xuehao = rows[0]['XUEHAO']
+    } else {
+      throw '认证失败'
+    }
+    // 生成 32 字节 token 转为十六进制，及其哈希值
+    let token = Buffer.from(crypto.randomBytes(20)).toString('hex')
+    let tokenHash = hash(token)
+    console.log(token, tokenHash)
+    // 记录token
+    await ctx.db.execute(`
+      INSERT INTO ESSAY_AUTH
+      (TOKEN_HASH, USERNAME, ROLE, NAME, XUEHAO, USERID)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `, [tokenHash, username, role, name, xuehao, userid])
+    ctx.body = token
+    ctx.logMsg = `${username} [${name}]-身份认证成功`
+    return
+  } else if (ctx.request.headers['x-api-token']) {
+    let token = ctx.request.headers['x-api-token']
+    let tokenHash = hash(token)
+    let record = tokenHash[tokenHash]
+
+    if (!record) {
+      // 缓存不命中
+      const [rows, field] = await ctx.db.query(`
+        SELECT USERNAME, ROLE, NAME, XUEHAO, USERID
+        FROM ESSAY_AUTH
+        WHERE TOKEN_HASH = ?
+      `, [tokenHash])
+      if (rows && field && rows.length > 0) {
+        record = {
+          username: rows[0]['USERNAME'],
+          role: rows[0]['ROLE'],
+          name: rows[0]['NAME'],
+          xuehao: rows[0]['XUEHAO'],
+          userid: rows[0]['USERID']
+        }
+        tokenHashPool[tokenHash] = record
+      } else {
+        record = null
+      }
+    }
+
+    let { username, role, name, xuehao, userid } = record
+
+    ctx.user = {
+      isLogin: true,
+      token: tokenHash,
+      username, role, name, xuehao, userid
+    }
+
     await next()
   } else {
-    let token = ctx.request.headers.authorization
-    if (token) {
-      let user = await userdb.findOne({ token })
-      if (user) {
-        let { _id, num, QQ, name } = user
-        ctx.params._id = ObjectId(_id)
-        ctx.params.num = num
-        ctx.params.QQ = QQ
-        ctx.params.name = name
-        await next()
-      }
-      else throw "登陆过期,请重新登陆"
+    if (ctx.path !== '/signup') {
+      throw '未登录'
     }
-    else throw "您尚未登录"
+    await next()
   }
-  return "登陆成功"
 }
