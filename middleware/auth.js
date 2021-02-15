@@ -47,10 +47,10 @@ module.exports = async (ctx, next) => {
     ctx.logMsg = `${username} [${name}]-身份认证成功`
     return
   } else if (ctx.request.headers['x-api-token']) {
+    // 根据token获取用户信息, 完成鉴权
     let token = ctx.request.headers['x-api-token']
     let tokenHash = hash(token)
-    let record = tokenHash[tokenHash]
-
+    let record = tokenHashPool[tokenHash]
     if (!record) {
       // 缓存不命中
       const [rows, field] = await ctx.db.query(`
