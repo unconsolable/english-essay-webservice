@@ -9,14 +9,20 @@ exports.route = {
       let classInfo = []
       for (let curClassId of result[0]) {
         let curClassInfo = await this.db.query(`
-          SELECT ID, CLASS_NAME, CLASS_TEACHERID
+          SELECT ID, CLASS_NAME, CLASS_TEACHERID, CLASS_CODE
           FROM ESSAY_CLASS
           WHERE ID = ?
         `, [curClassId["CLASS_ID"]])
+        let teacherInfo = await this.db.query(`
+          SELECT NAME
+          FROM ESSAY_USER
+          WHERE ID = ?
+        `, curClassInfo[0][0]["CLASS_TEACHERID"])
         classInfo.push({
           classId: curClassInfo[0][0]["ID"],
           className: curClassInfo[0][0]["CLASS_NAME"],
-          classTeacherId: curClassInfo[0][0]["CLASS_TEACHERID"]
+          classTeacherName: teacherInfo[0][0]["NAME"],
+          classCode: curClassInfo[0][0]["CLASS_CODE"]
         })
       }
       return classInfo
@@ -31,7 +37,8 @@ exports.route = {
         classInfo.push({
           classId: curClassInfo["ID"],
           className: curClassInfo["CLASS_NAME"],
-          classCode: curClassInfo["CLASS_CODE"]
+          classCode: curClassInfo["CLASS_CODE"],
+          classTeacherName: this.user.name
         })
       })
       return classInfo

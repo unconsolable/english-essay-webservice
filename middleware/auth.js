@@ -36,7 +36,6 @@ module.exports = async (ctx, next) => {
     // 生成 32 字节 token 转为十六进制，及其哈希值
     let token = Buffer.from(crypto.randomBytes(20)).toString('hex')
     let tokenHash = hash(token)
-    console.log(token, tokenHash)
     // 记录token
     await ctx.db.execute(`
       INSERT INTO ESSAY_AUTH
