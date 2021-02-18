@@ -14,14 +14,26 @@ exports.route = {
           FROM ESSAY_TASK
           WHERE CLASS_ID = ?
         `, [curClassId["CLASS_ID"]])
-        curTaskInfo[0].forEach(t => {
+        for (let t of curTaskInfo[0]) 
+        {
+          let isSubmit = await this.db.query(`
+            SELECT COUNT(*) AS CNT
+            FROM ESSAY_WORK
+            WHERE USER_ID = ? AND TASK_ID = ?
+          `, [this.user.userid, t["ID"]])
+          if (isSubmit[0][0]['CNT'] > 0) {
+            isSubmit = true
+          } else {
+            isSubmit = false
+          }
           taskInfo.push({
             taskId: t["ID"],
             classId: t["CLASS_ID"],
             taskTitle: t["TASK_TITLE"],
-            taskDesc: t["TASK_DESC"]
+            taskDesc: t["TASK_DESC"],
+            isSubmit
           })
-        })
+        }
       }
       return taskInfo
     } else if (this.user.role === 'tea') {

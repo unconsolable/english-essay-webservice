@@ -1,6 +1,5 @@
 exports.route = {
   async delete({classId}) {
-    console.log(this.user.userid, classId)
     if (this.user.role !== 'stu') {
       throw '角色错误'
     }
