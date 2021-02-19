@@ -1,10 +1,11 @@
 exports.route = {
   async get({taskId, userId = this.user.userid}) {
+    // 学生从这里获取成绩
     if (!taskId) {
       throw '参数不全'
     }
     let record = await this.db.query(`
-      SELECT USER_ID, TASK_ID, TITLE, BODY
+      SELECT USER_ID, TASK_ID, TITLE, BODY, MARK
       FROM ESSAY_WORK
       WHERE TASK_ID = ? AND USER_ID = ?
     `, [taskId, userId])
@@ -12,7 +13,8 @@ exports.route = {
       userId: record[0][0]["USER_ID"],
       taskId: record[0][0]["TASK_ID"],
       title: record[0][0]["TITLE"],
-      body: record[0][0]["BODY"]
+      body: record[0][0]["BODY"],
+      mark: record[0][0]["MARK"]
     }
   },
   async post({taskId, title, body}) {
