@@ -24,10 +24,10 @@ exports.route = {
     if (!taskId || !title || !body) {
       throw '参数不全'
     }
-    if (title.length > 30) {
+    if (title.length > 250) {
       throw '标题过长'
     }
-    if (body.length > 1500) {
+    if (body.length > 3500) {
       throw '正文过长'
     }
     try {
