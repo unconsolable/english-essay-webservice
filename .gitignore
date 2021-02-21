@@ -2,3 +2,4 @@ node_modules/
 .repl_history
 .repl_history
 database/mysql-secret.json
+sdk/sdk.json
