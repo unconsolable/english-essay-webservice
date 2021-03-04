@@ -26,17 +26,10 @@ exports.route = {
     // const params = {
     //   "Content": body,
     //   "Title": title,
-    //   "Grade": "cet4"
+    //   "Grade": "grade11"
     // }
-    // client.ECC(params).then(
-    //   (data) => {
-    //     console.log(data)
-    //   },
-    //   (err) => {
-    //     throw err
-    //   }
-    // )
-
+      
+    // let data = await client.ECC(params)
 
     let marks = [{Name: '总分', Score: data.Data.Score, Percentage: '100%'}]
     for (let i of Object.keys(data.Data.ScoreCat)) {
