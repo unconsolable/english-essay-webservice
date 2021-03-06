@@ -7,7 +7,7 @@ exports.route = {
     if (!title || !body) {
       throw '参数不全'
     }
-    let data = config.mock
+    let data = JSON.parse(JSON.stringify(config.mock))
     // const EccClient = tencentcloud.ecc.v20181213.Client
     // const clientConfig = {
     //   credential: {
@@ -30,7 +30,7 @@ exports.route = {
     // }
       
     // let data = await client.ECC(params)
-
+    console.log(data.Data.ScoreCat)
     let marks = [{Name: '总分', Score: data.Data.Score, Percentage: '100%'}]
     for (let i of Object.keys(data.Data.ScoreCat)) {
       if (data.Data.ScoreCat[i].Name && data.Data.ScoreCat[i].Score) {
@@ -42,6 +42,7 @@ exports.route = {
       }
     }
     data.Data.ScoreCat = marks
+    console.log(data.Data.ScoreCat)
     return data
   }
 }
