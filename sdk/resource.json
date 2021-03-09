@@ -1,0 +1,29 @@
+{
+  "learnResources" : [
+    {
+      "name": "作文专题",
+      "res": [
+        {
+          "title": "On the health care system",
+          "url": "//player.bilibili.com/player.html?aid=89384990&bvid=BV187411n7s7&cid=152669272&page=1"
+        },
+        {
+          "title": "Travelling Abroad",
+          "url": "//player.bilibili.com/player.html?aid=89384990&bvid=BV187411n7s7&cid=152669310&page=2"
+        },
+        {
+          "title": "Concerns over Prices",
+          "url": "//player.bilibili.com/player.html?aid=89384990&bvid=BV187411n7s7&cid=152669368&page=3"
+        },
+        {
+          "title":"Student's Views on Sorted Dustbin",
+          "url": "//player.bilibili.com/player.html?aid=89384990&bvid=BV187411n7s7&cid=152669395&page=4"
+        },
+        {
+          "title": "Different Stages, Different Needs",
+          "url": "//player.bilibili.com/player.html?aid=89384990&bvid=BV187411n7s7&cid=152669423&page=5"
+        }
+      ]
+    }
+  ]
+}
