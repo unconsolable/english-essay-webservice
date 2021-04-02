@@ -1,7 +1,8 @@
 {
   "learnResources" : [
     {
-      "name": "作文专题",
+      "name": "英语四六级",
+      "cover": "static/video-cover1.jpg",
       "res": [
         {
           "title": "On the health care system",
@@ -22,6 +23,50 @@
         {
           "title": "Different Stages, Different Needs",
           "url": "//player.bilibili.com/player.html?aid=89384990&bvid=BV187411n7s7&cid=152669423&page=5"
+        }
+      ]
+    },
+    {
+      "name": "学术写作",
+      "cover": "static/chicago.png",
+      "res": [
+        {
+          "title": "芝加哥大学有效写作教程1",
+          "url": "//player.bilibili.com/player.html?aid=711864450&bvid=BV1gD4y1m7gV&cid=224956872&page=1"
+        },
+        {
+          "title": "芝加哥大学有效写作教程2",
+          "url": "//player.bilibili.com/player.html?aid=711864450&bvid=BV1gD4y1m7gV&cid=224957291&page=2"
+        },
+        {
+          "title": "论点支撑教程",
+          "url": "//player.bilibili.com/player.html?aid=968735557&bvid=BV1Np4y1S7Xb&cid=208492100&page=1"
+        }
+      ]
+    },
+    {
+      "name": "雅思写作拓展",
+      "cover": "static/ielts.png",
+      "res": [
+        {
+          "title": "Bar Charts Lesson 1",
+          "url": "//player.bilibili.com/player.html?aid=970742064&bvid=BV1kp4y1q7Ue&cid=268008402&page=1"
+        },
+        {
+          "title": "Bar Charts Lesson 2",
+          "url": "//player.bilibili.com/player.html?aid=970742064&bvid=BV1kp4y1q7Ue&cid=268008610&page=2"
+        },
+        {
+          "title": "Bar Charts Lesson 3",
+          "url": "//player.bilibili.com/player.html?aid=970742064&bvid=BV1kp4y1q7Ue&cid=268008791&page=3"
+        },
+        {
+          "title": "Pie Charts",
+          "url": "//player.bilibili.com/player.html?aid=970742064&bvid=BV1kp4y1q7Ue&cid=268009359&page=7"
+        },
+        {
+          "title": "Process Diagrams",
+          "url": "//player.bilibili.com/player.html?aid=970742064&bvid=BV1kp4y1q7Ue&cid=268009521&page=8"
         }
       ]
     }
